@@ -47,5 +47,38 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 }
 
+export const convertColletionsSnapshotToMap = collections => {
+  const transformedCollection = collections.docs.map(doc => {
+    const { title, items} = doc.data();
+    return { 
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title: title,
+      items:items
+    }
+  });
+  
+  return transformedCollection.reduce((accumulater,collection) => {
+    accumulater[collection.title.toLowerCase()] = collection;
+    return accumulater;
+  }, {})
+}
+
+// Function used to insert shop data into firestore
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+
+  const collectionRef = firestore.collection(collectionKey);
+  console.log(collectionRef); 
+
+  const batch = firestore.batch();
+
+  objectsToAdd.forEach(obj => {
+    const newDocRef = collectionRef.doc();
+    batch.set(newDocRef, obj);
+  });
+
+  return await batch.commit();
+}
+
 export default firebase;
 
