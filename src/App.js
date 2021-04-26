@@ -11,6 +11,7 @@ import CheckoutPage from './pages/checkout/checkout.component';
 
 import Header from './components/header/header.component';
 import SignInAndSignUp from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
+import NotificationsContainer from './components/notification-container/notication-container.component';
 
 import { selectCurrentUser} from './redux/user/user.selectors'
 import { checkUserSession } from './redux/user/user.actions';
@@ -31,6 +32,7 @@ const App = ({ checkSession, currentUser }) => {
         <Route path='/checkout' component={CheckoutPage} />
         <Route exact path='/signin' render={() => currentUser ? <Redirect to='/' /> : <SignInAndSignUp /> } />
       </Switch>
+      <NotificationsContainer />
     </div>
   ); 
 }

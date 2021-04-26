@@ -3,12 +3,16 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import { signInSuccess, signInFailure, signOutSuccess, signOutFailure, signUpFailure, signUpSuccess } from './user.actions';
 import userActionTypes from './user.types';
 import { auth,googleProvider, createUserProfileDocument, getCurrentUser } from '../../firebase/firebase.utils';
+import { pushNotification } from '../notification/notification.actions';
+import uniqid from 'uniqid';
 
 export function* getSnapshotFromUserAuth(userAuth, additionalData) {
   try {
     const userRef = yield call(createUserProfileDocument, userAuth, additionalData);
     const snapshot = yield userRef.get();
     yield put(signInSuccess( {id: snapshot.id, ...snapshot.data() } ));
+    const title = `Welcome ${snapshot.data().displayName}`;
+    yield put(pushNotification({title: title, message: "You have succesfully signed in", id: uniqid()}))
 
   } catch (error) {
     yield put(signInFailure(error));
@@ -30,6 +34,7 @@ export function* signInWithEmail({payload: {email, password}}) {
     yield getSnapshotFromUserAuth(user);
   } catch (error) {
     yield put(signInFailure(error));
+    yield put(pushNotification({title: "Error", message: "Incorrect email or password", id: uniqid(), level: 'error'}))
   }
 }
 
@@ -52,6 +57,7 @@ export function* signOut() {
   try {
     yield auth.signOut();
     yield put(signOutSuccess());
+    yield put(pushNotification({title: "Signed Out", message: "Goodbye", id: uniqid()}))
   } catch (error) {
     yield put(signOutFailure(error)) ;
   }
