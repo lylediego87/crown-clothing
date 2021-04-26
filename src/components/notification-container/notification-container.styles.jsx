@@ -10,9 +10,11 @@ export const Container = styled.div`
   top: 10px;
   right: 600px;
   z-index: 5;
-
+  pointer-events: none;
+  
   @media screen and (max-width: 800px) {
     right: unset;
     bottom: 350px;
+    pointer-events: none;
   }
 `;
