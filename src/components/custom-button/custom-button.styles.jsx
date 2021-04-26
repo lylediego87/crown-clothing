@@ -4,8 +4,8 @@ const regularButtonStyles = css`
   background-color: black;
   color: white;
   border: none;
-  margin: 0 3px;
-
+  margin: 0 2px;
+  
   &:hover {
     background-color: white;
     color: black;
