@@ -11,6 +11,7 @@ const userActionTypes = {
   SIGN_UP_START: 'SIGN_UP_START',
   SIGN_UP_SUCCESS: 'SIGN_UP_SUCCESS',
   SIGN_UP_FAILURE: 'SIGN_UP_FAILURE',
+  CART_PERSISTED: 'CART_PERSISTED'
 }
 
 export default userActionTypes;

@@ -1,4 +1,6 @@
 import { cartActionTypes } from './cart.types';
+import  userActionTypes  from '../user/user.types';
+
 import { addItemToCart, removeItemFromCart } from './cart.utils';
 
 const INITIAL_STATE = {
@@ -7,7 +9,7 @@ const INITIAL_STATE = {
 }
 
 const cartReducer = (state = INITIAL_STATE, action ) => {
-  switch(action.type) {
+    switch(action.type) {
     case cartActionTypes.TOGGLE_HIDDEN :
       return {
         ...state,
@@ -32,6 +34,11 @@ const cartReducer = (state = INITIAL_STATE, action ) => {
         return {
           ...state,
           cartItems: []
+        }
+      case userActionTypes.SIGN_IN_SUCCESS :
+        return {
+          ...state,
+          cartItems: action.payload['cartItems']
         }
     default:
       return state;  

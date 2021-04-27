@@ -2,7 +2,7 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 
 import { signInSuccess, signInFailure, signOutSuccess, signOutFailure, signUpFailure, signUpSuccess } from './user.actions';
 import userActionTypes from './user.types';
-import { auth,googleProvider, createUserProfileDocument, getCurrentUser } from '../../firebase/firebase.utils';
+import { auth,googleProvider, createUserProfileDocument, getCurrentUser, persistCartToFirestore } from '../../firebase/firebase.utils';
 import { pushNotification } from '../notification/notification.actions';
 import uniqid from 'uniqid';
 
@@ -73,6 +73,11 @@ export function* signUp({payload: {displayName, email,password}}) {
   }
 }
 
+export function* persistCart({payload: {cartItems}}) {
+  yield persistCartToFirestore(cartItems);
+  yield call(signOut);
+}
+
 export function* onGoogleSignInStart() {
   yield takeLatest(userActionTypes.GOOGLE_SIGN_IN_START, signInWithGoogle)
 }
@@ -86,7 +91,7 @@ export function* onCheckUserSession() {
 }
 
 export function* onSignOutStart() {
-  yield takeLatest(userActionTypes.SIGN_OUT_START, signOut)
+  yield takeLatest(userActionTypes.SIGN_OUT_START, persistCart)
 }
 
 export function* onSignUpStart() {

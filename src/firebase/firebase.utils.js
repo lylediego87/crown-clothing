@@ -40,12 +40,13 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   if(!snapShot.exists){
     const { displayName, email }  = userAuth;
     const createdAt = new Date();
-     
+    const cartItems = [];
     try {
       await userRef.set({
         displayName,
         email,
         createdAt,
+        cartItems,
         ...additionalData
       })
     } catch (error) {
@@ -54,6 +55,16 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   }
 
   return userRef;
+}
+
+export const persistCartToFirestore = async (items) => {
+  const userAuth = await getCurrentUser();
+  const userRef = firestore.doc(`users/${userAuth.uid}`); 
+  try {
+    userRef.set({cartItems: items },{merge: true});
+  } catch (error) {
+    console.log("error persisteing cart", error.message);
+  }
 }
 
 export const convertColletionsSnapshotToMap = collections => {
